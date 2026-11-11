@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="FamBudget">
-<meta name="description" content="Budget familiare: entrate, uscite, budget per categoria, costi fissi e obiettivi di risparmio.">
+<meta name="description" content="Budget familiare: entrate, uscite, budget per categoria, costi fissi, carta di credito e obiettivi di risparmio.">
 <title>FamBudget Pro – Budget familiare</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='24' fill='%2310b981'/%3E%3Ctext x='50' y='70' font-size='56' text-anchor='middle' fill='white' font-family='Arial' font-weight='700'%3E€%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -26,6 +26,7 @@
   --accent:#059669; --accent-2:#0d9488; --accent-soft:rgba(16,185,129,.13); --on-accent:#ffffff;
   --income:#047857; --expense:#be123c; --expense-soft:rgba(244,63,94,.12);
   --warn:#b45309; --warn-soft:rgba(245,158,11,.16);
+  --card:#4f46e5; --card-soft:rgba(99,102,241,.14);
   --track:rgba(15,23,42,.08);
   --shadow:0 12px 32px -18px rgba(6,40,30,.35);
   --nav-bg:rgba(250,252,251,.9);
@@ -42,6 +43,7 @@
     --accent:#10b981; --accent-2:#2dd4bf; --accent-soft:rgba(16,185,129,.16); --on-accent:#ffffff;
     --income:#34d399; --expense:#fb7185; --expense-soft:rgba(244,63,94,.16);
     --warn:#fbbf24; --warn-soft:rgba(245,158,11,.16);
+    --card:#a5b4fc; --card-soft:rgba(129,140,248,.16);
     --track:rgba(255,255,255,.08);
     --shadow:0 16px 40px -20px rgba(0,0,0,.7);
     --nav-bg:rgba(7,16,22,.9);
@@ -89,6 +91,7 @@ svg.i.sm{width:16px;height:16px}
 main{max-width:560px;margin:0 auto;padding:16px 16px calc(var(--nav-h) + env(safe-area-inset-bottom,0px) + 28px);display:flex;flex-direction:column;gap:14px}
 .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px;box-shadow:var(--shadow);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
 .card h3{font-size:15px;font-weight:700;margin-bottom:12px}
+.card .note{margin-top:10px}
 .section-head{display:flex;justify-content:space-between;align-items:center;padding:4px 4px 0}
 .section-head h3{font-size:15px;font-weight:700}
 .link-btn{color:var(--accent);font-weight:700;font-size:13px;padding:7px 11px;border-radius:10px;background:var(--accent-soft)}
@@ -102,6 +105,7 @@ main{max-width:560px;margin:0 auto;padding:16px 16px calc(var(--nav-h) + env(saf
 .seg.full button{flex:1;justify-content:center;padding:10px}
 .seg.type button[data-value="expense"][aria-pressed="true"]{color:var(--expense)}
 .seg.type button[data-value="income"][aria-pressed="true"]{color:var(--income)}
+.seg.pay button[data-value="card"][aria-pressed="true"]{color:var(--card)}
 
 /* Hero */
 .hero{position:relative;overflow:hidden}
@@ -115,6 +119,7 @@ main{max-width:560px;margin:0 auto;padding:16px 16px calc(var(--nav-h) + env(saf
 .stat .ic{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;flex-shrink:0}
 .ic.in{background:var(--accent-soft);color:var(--income)}
 .ic.out{background:var(--expense-soft);color:var(--expense)}
+.ic.cc{background:var(--card-soft);color:var(--card)}
 .stat-label{font-size:12px;color:var(--muted)}
 .stat-value{font-weight:800;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .mini-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -125,6 +130,15 @@ main{max-width:560px;margin:0 auto;padding:16px 16px calc(var(--nav-h) + env(saf
 .progress.warn>span{background:var(--warn)}
 .progress.over>span{background:var(--expense)}
 .budget-bar{display:flex;flex-direction:column;gap:7px}
+
+/* Carta di credito */
+.cc-box{display:flex;flex-direction:column;gap:8px;padding:12px;border-radius:var(--radius);background:var(--card-soft);border:1px solid transparent}
+.cc-row{display:flex;align-items:center;gap:10px;width:100%}
+.cc-row .ic{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;flex-shrink:0;background:var(--surface-solid);color:var(--card)}
+.cc-row .grow{display:flex;flex-direction:column}
+.cc-row .amt{color:var(--card)}
+.cc-box .small{padding-left:44px}
+.cc-tag{display:inline-flex;align-items:center;gap:3px;color:var(--card);font-weight:700}
 
 /* Goals */
 .goals{display:flex;flex-direction:column;gap:10px}
@@ -228,6 +242,7 @@ main{max-width:560px;margin:0 auto;padding:16px 16px calc(var(--nav-h) + env(saf
 /* Forms */
 .form{display:flex;flex-direction:column;gap:14px}
 .field{display:flex;flex-direction:column;gap:6px}
+.field[hidden]{display:none}
 .field>span{font-size:12.5px;font-weight:700;color:var(--muted)}
 .field input,.field select{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--border-strong);background:var(--surface-2);font-size:16px;color:var(--text);outline:none;-webkit-appearance:none;appearance:none;min-height:48px}
 .field select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2.5' stroke-linecap='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;background-size:16px;padding-right:36px}
@@ -240,6 +255,7 @@ main{max-width:560px;margin:0 auto;padding:16px 16px calc(var(--nav-h) + env(saf
 .form-error{color:var(--expense);font-size:13.5px;font-weight:700}
 .form-error[hidden]{display:none}
 .form-note{font-size:12.5px;color:var(--muted);display:flex;align-items:center;gap:6px}
+.form-note[hidden]{display:none}
 .actions{display:flex;gap:10px;margin-top:4px}
 .btn{flex:1;padding:13px 16px;border-radius:14px;font-weight:800;font-size:15px;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:50px}
 .btn.primary{background:linear-gradient(140deg,var(--accent),var(--accent-2));color:#fff}
@@ -253,6 +269,8 @@ main{max-width:560px;margin:0 auto;padding:16px 16px calc(var(--nav-h) + env(saf
 .quick{display:flex;gap:8px}
 .quick button{flex:1;padding:9px;border-radius:10px;background:var(--surface-2);border:1px solid var(--border);font-weight:700;font-size:14px}
 .confirm-msg{color:var(--muted);font-size:14.5px;margin-bottom:18px}
+.calc-box{background:var(--card-soft);border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:4px}
+.calc-box strong{font-size:20px;font-weight:800;color:var(--card)}
 
 /* Voice */
 .voice{display:flex;flex-direction:column;gap:14px}
@@ -343,10 +361,10 @@ main{max-width:560px;margin:0 auto;padding:16px 16px calc(var(--nav-h) + env(saf
 'use strict';
 
 /* ---------- Costanti ---------- */
-const STORAGE_KEY = 'fambudget_pro_v2';
+const STORAGE_KEY = 'fambudget_pro_v2';   // invariata: i dati già salvati restano
 const LEGACY_KEY = 'fambudget_pro_state';
-const SCHEMA = 2;
-const VERSION = '2.0';
+const SCHEMA = 3;
+const VERSION = '2.1';
 const MONTHS = ['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'];
 const MONTHS_SHORT = ['Gen','Feb','Mar','Apr','Mag','Giu','Lug','Ago','Set','Ott','Nov','Dic'];
 const INCOME_CATEGORIES = [
@@ -359,6 +377,7 @@ const PALETTE = ['#10b981','#3b82f6','#f59e0b','#ec4899','#8b5cf6','#64748b','#1
 const AVATARS = ['👨‍💼','👩‍💼','👦','👧','👴','👵','🧑','👶','🐶','🐱'];
 const CAT_EMOJIS = ['🛒','🏠','🚗','🧒','🎉','📦','💊','📚','👕','✈️','🐾','💡','🍽️','🎁'];
 const GOAL_EMOJIS = ['🎯','🏖️','🛡️','🚗','🏠','🎓','💍','💻'];
+const PAYMENT_LABEL = { account: 'Conto', card: 'Carta di credito' };
 
 const ICONS = {
   home: '<path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
@@ -376,6 +395,7 @@ const ICONS = {
   x: '<path d="M18 6 6 18M6 6l12 12"/>',
   check: '<path d="M20 6 9 17l-5-5"/>',
   wallet: '<path d="M19 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-3"/><path d="M21 11h-4a2 2 0 0 0 0 4h4z"/>',
+  card: '<rect x="2" y="5" width="20" height="14" rx="2.5"/><path d="M2 10h20M6 15h4"/>',
   piggy: '<path d="M5 11a7 6 0 0 1 12.5-3.5H20v4l-1.6.8A6 6 0 0 1 16 16v3h-3v-2h-3v2H7v-3.3A6 6 0 0 1 5 11z"/><path d="M15 10.5h.01"/>',
   download: '<path d="M12 3v12M7 10l5 5 5-5M5 21h14"/>',
   upload: '<path d="M12 15V3M7 8l5-5 5 5M5 21h14"/>',
@@ -403,8 +423,10 @@ const monthKey = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}`;
 const daysInMonth = key => { const [y, m] = key.split('-').map(Number); return new Date(y, m, 0).getDate(); };
 const shiftMonth = (key, delta) => { const [y, m] = key.split('-').map(Number); return monthKey(new Date(y, m - 1 + delta, 1)); };
 const monthLabel = key => { const [y, m] = key.split('-').map(Number); return `${MONTHS[m - 1]} ${y}`; };
+const monthName = key => MONTHS[+key.slice(5) - 1].toLowerCase();
 const sum = (arr, f = x => x) => round2(arr.reduce((a, x) => a + (Number(f(x)) || 0), 0));
 const capitalize = s => s.charAt(0).toUpperCase() + s.slice(1);
+const isCard = t => t.type === 'expense' && t.payment === 'card';
 const hexA = (hex, a) => {
   const h = /^#([0-9a-f]{6})$/i.exec(hex || '');
   if (!h) return `rgba(100,116,139,${a})`;
@@ -441,11 +463,13 @@ function defaultCategories() {
 }
 
 function defaultState() {
-  const now = new Date(), mk = monthKey(now), today = now.getDate();
+  const now = new Date(), mk = monthKey(now), prev = shiftMonth(mk, -1), today = now.getDate();
   const d = day => `${mk}-${pad(Math.min(day, today))}`;
   let c = Date.now();
   return {
     schema: SCHEMA,
+    settings: { cardDay: 15 },
+    cardDebits: {},
     members: [
       { id: 'm1', name: 'Antonino', avatar: '👨‍💼' },
       { id: 'm2', name: 'Veronica', avatar: '👩‍💼' },
@@ -453,16 +477,18 @@ function defaultState() {
     ],
     categories: defaultCategories(),
     fixedCosts: [
-      { id: 'f1', title: 'Mutuo', amount: 750, category: 'Casa', dueDay: 5 },
-      { id: 'f2', title: 'Luce & Gas', amount: 180, category: 'Casa', dueDay: 15 },
-      { id: 'f3', title: 'Internet Fibra', amount: 29.9, category: 'Casa', dueDay: 10 }
+      { id: 'f1', title: 'Mutuo', amount: 750, category: 'Casa', dueDay: 5, payment: 'account' },
+      { id: 'f2', title: 'Luce & Gas', amount: 180, category: 'Casa', dueDay: 15, payment: 'account' },
+      { id: 'f3', title: 'Internet Fibra', amount: 29.9, category: 'Casa', dueDay: 10, payment: 'account' }
     ],
     transactions: [
-      { id: 't1', created: c++, title: 'Stipendio', amount: 2800, type: 'income', category: 'Lavoro', memberId: 'm1', date: d(1) },
-      { id: 't2', created: c++, title: 'Supermercato Esselunga', amount: 125.5, type: 'expense', category: 'Alimentari', memberId: 'm2', date: d(2) },
-      { id: 't3', created: c++, title: 'Mutuo', amount: 750, type: 'expense', category: 'Casa', memberId: 'm1', date: d(3), fixedId: 'f1' },
-      { id: 't4', created: c++, title: 'Benzina Eni', amount: 65, type: 'expense', category: 'Auto', memberId: 'm1', date: d(4) },
-      { id: 't5', created: c++, title: 'Internet Fibra', amount: 29.9, type: 'expense', category: 'Casa', memberId: 'm1', date: d(10), fixedId: 'f3' }
+      { id: 't0', created: c++, title: 'Ristorante', amount: 86, type: 'expense', category: 'Svago', memberId: 'm2', date: `${prev}-12`, payment: 'card' },
+      { id: 't1', created: c++, title: 'Stipendio', amount: 2800, type: 'income', category: 'Lavoro', memberId: 'm1', date: d(1), payment: 'account' },
+      { id: 't2', created: c++, title: 'Supermercato Esselunga', amount: 125.5, type: 'expense', category: 'Alimentari', memberId: 'm2', date: d(2), payment: 'account' },
+      { id: 't3', created: c++, title: 'Mutuo', amount: 750, type: 'expense', category: 'Casa', memberId: 'm1', date: d(3), fixedId: 'f1', payment: 'account' },
+      { id: 't4', created: c++, title: 'Benzina Eni', amount: 65, type: 'expense', category: 'Auto', memberId: 'm1', date: d(4), payment: 'account' },
+      { id: 't6', created: c++, title: 'Amazon', amount: 42.9, type: 'expense', category: 'Altro', memberId: 'm1', date: d(6), payment: 'card' },
+      { id: 't5', created: c++, title: 'Internet Fibra', amount: 29.9, type: 'expense', category: 'Casa', memberId: 'm1', date: d(10), fixedId: 'f3', payment: 'account' }
     ],
     goals: [
       { id: 'g1', title: 'Vacanze estive', target: 2000, current: 850, emoji: '🏖️' },
@@ -494,13 +520,21 @@ function normalize(s) {
   if (!s || typeof s !== 'object') throw new Error('Formato non valido');
   const arr = v => Array.isArray(v) ? v : [];
   const num = v => { const n = round2(v); return Number.isFinite(n) ? n : 0; };
+  const pay = v => v === 'card' ? 'card' : 'account';
+  const debits = {};
+  if (s.cardDebits && typeof s.cardDebits === 'object') {
+    Object.entries(s.cardDebits).forEach(([k, v]) => { const n = round2(v); if (/^\d{4}-\d{2}$/.test(k) && Number.isFinite(n) && n >= 0) debits[k] = n; });
+  }
   const out = {
     schema: SCHEMA,
+    settings: { cardDay: Math.min(31, Math.max(1, parseInt(s.settings && s.settings.cardDay, 10) || 15)) },
+    cardDebits: debits,
     members: arr(s.members).filter(m => m && m.id != null && m.name).map(m => ({ id: String(m.id), name: String(m.name).slice(0, 30), avatar: String(m.avatar || '🧑') })),
     categories: arr(s.categories).filter(c => c && c.name).map((c, i) => ({ name: String(c.name).slice(0, 24), limit: Math.max(0, num(c.limit)), emoji: String(c.emoji || '📦'), color: /^#[0-9a-f]{6}$/i.test(c.color) ? c.color : PALETTE[i % PALETTE.length] })),
-    fixedCosts: arr(s.fixedCosts).filter(f => f && f.id != null && f.title).map(f => ({ id: String(f.id), title: String(f.title).slice(0, 60), amount: Math.abs(num(f.amount)), category: String(f.category || 'Altro'), dueDay: Math.min(31, Math.max(1, parseInt(f.dueDay, 10) || 1)) })),
+    fixedCosts: arr(s.fixedCosts).filter(f => f && f.id != null && f.title).map(f => ({ id: String(f.id), title: String(f.title).slice(0, 60), amount: Math.abs(num(f.amount)), category: String(f.category || 'Altro'), dueDay: Math.min(31, Math.max(1, parseInt(f.dueDay, 10) || 1)), payment: pay(f.payment) })),
     transactions: arr(s.transactions).filter(t => t && t.id != null && Number.isFinite(Number(t.amount)) && /^\d{4}-\d{2}-\d{2}$/.test(t.date)).map(t => {
-      const o = { id: String(t.id), created: Number(t.created) || 0, title: String(t.title || '').slice(0, 60), amount: Math.abs(num(t.amount)), type: t.type === 'income' ? 'income' : 'expense', category: String(t.category || 'Altro'), memberId: t.memberId ? String(t.memberId) : null, date: t.date };
+      const type = t.type === 'income' ? 'income' : 'expense';
+      const o = { id: String(t.id), created: Number(t.created) || 0, title: String(t.title || '').slice(0, 60), amount: Math.abs(num(t.amount)), type, category: String(t.category || 'Altro'), memberId: t.memberId ? String(t.memberId) : null, date: t.date, payment: type === 'expense' ? pay(t.payment) : 'account' };
       if (t.fixedId) o.fixedId = String(t.fixedId);
       return o;
     }),
@@ -517,7 +551,7 @@ function loadState() {
   if (raw) { try { return normalize(JSON.parse(raw)); } catch (e) { console.warn('Dati salvati non validi', e); } }
   const legacy = storage.read(LEGACY_KEY);
   if (legacy) { try { return normalize(migrateLegacy(JSON.parse(legacy))); } catch (e) { console.warn('Migrazione non riuscita', e); } }
-  return defaultState();
+  return normalize(defaultState());
 }
 
 /* ---------- App ---------- */
@@ -569,11 +603,26 @@ const App = {
 
   /* ----- Dati derivati ----- */
   monthTx(mk = this.month) { return this.state.transactions.filter(t => t.date.startsWith(mk)); },
+
+  /* Spese con carta di credito fatte nel mese mk (verranno addebitate il mese dopo) */
+  cardSpentIn(mk) { return sum(this.monthTx(mk).filter(isCard), t => t.amount); },
+  /* Importo della carta addebitato sul conto nel mese mk: spese con carta del mese prima,
+     oppure l'importo dell'estratto conto se inserito a mano */
+  cardDebit(mk = this.month) {
+    const manual = this.state.cardDebits[mk];
+    return manual != null ? manual : this.cardSpentIn(shiftMonth(mk, -1));
+  },
+  cardDebitIsManual(mk = this.month) { return this.state.cardDebits[mk] != null; },
+  cardDebitDate(mk = this.month) { return `${mk}-${pad(Math.min(this.state.settings.cardDay, daysInMonth(mk)))}`; },
+
   totals(mk = this.month) {
     const tx = this.monthTx(mk);
     const income = sum(tx.filter(t => t.type === 'income'), t => t.amount);
-    const expense = sum(tx.filter(t => t.type === 'expense'), t => t.amount);
-    return { income, expense, balance: round2(income - expense) };
+    const expense = sum(tx.filter(t => t.type === 'expense'), t => t.amount);   // per data di acquisto (budget)
+    const cardSpent = sum(tx.filter(isCard), t => t.amount);                    // pagato con carta questo mese
+    const cardDebit = this.cardDebit(mk);                                       // carta del mese prima, addebitata ora
+    const outflow = round2(expense - cardSpent + cardDebit);                    // uscite effettive dal conto
+    return { income, expense, cardSpent, cardDebit, outflow, balance: round2(income - outflow) };
   },
   cat(name) {
     return this.state.categories.find(c => c.name === name) || INCOME_CATEGORIES.find(c => c.name === name) || { name, emoji: '📦', color: '#64748b', limit: 0 };
@@ -634,9 +683,27 @@ const App = {
     document.getElementById('headerSub').textContent = `Famiglia di ${n} ${n === 1 ? 'persona' : 'persone'}`;
   },
 
+  cardBoxHTML(mk, t) {
+    const prev = shiftMonth(mk, -1), next = shiftMonth(mk, 1);
+    const day = +this.cardDebitDate(mk).slice(8);
+    return `
+      <div class="cc-box">
+        <button class="cc-row" data-action="card-debit" aria-label="Modifica addebito carta di ${esc(monthLabel(mk))}">
+          <span class="ic">${icon('card', 'sm')}</span>
+          <span class="grow">
+            <span class="stat-label">Addebito carta il ${day} ${esc(monthName(mk))}</span>
+            <span class="small" style="padding:0">${this.cardDebitIsManual(mk) ? 'Importo da estratto conto' : `Spese con carta di ${esc(monthName(prev))}`}</span>
+          </span>
+          <span class="amt num">−${fmt(t.cardDebit)}</span>
+        </button>
+        <p class="small">Speso con carta a ${esc(monthName(mk))}: <span class="strong">${fmt(t.cardSpent)}</span>, verrà addebitato a ${esc(monthName(next))}.</p>
+      </div>`;
+  },
+
   viewHome() {
     const mk = this.month;
-    const { income, expense, balance } = this.totals(mk);
+    const t = this.totals(mk);
+    const { income, expense, outflow, balance } = t;
     const budgetTotal = sum(this.state.categories, c => c.limit);
     const pct = budgetTotal > 0 ? Math.round(expense / budgetTotal * 100) : 0;
     const pclass = pct > 100 ? 'over' : pct >= 85 ? 'warn' : '';
@@ -646,13 +713,14 @@ const App = {
     const balanceHTML = `
       <div class="hero-body">
         <div>
-          <p class="hero-label">Saldo di ${esc(MONTHS[+mk.slice(5) - 1].toLowerCase())}</p>
+          <p class="hero-label">Saldo sul conto a ${esc(monthName(mk))}</p>
           <p class="big num ${balance < 0 ? 'neg' : ''}">${fmt(balance)}</p>
         </div>
         <div class="stats">
           <div class="stat"><span class="ic in">${icon('arrowDown', 'sm')}</span><div class="grow"><div class="stat-label">Entrate</div><div class="stat-value num" style="color:var(--income)">${fmt(income)}</div></div></div>
-          <div class="stat"><span class="ic out">${icon('arrowUp', 'sm')}</span><div class="grow"><div class="stat-label">Uscite</div><div class="stat-value num" style="color:var(--expense)">${fmt(expense)}</div></div></div>
+          <div class="stat"><span class="ic out">${icon('arrowUp', 'sm')}</span><div class="grow"><div class="stat-label">Uscite dal conto</div><div class="stat-value num" style="color:var(--expense)">${fmt(outflow)}</div></div></div>
         </div>
+        ${this.cardBoxHTML(mk, t)}
         <div class="mini-row">
           <div><span class="small">Media giornaliera</span><strong class="num">${avg == null ? '—' : fmt(avg)}</strong></div>
           <div><span class="small">Fissi da pagare</span><strong class="num">${fmt(pending)}</strong></div>
@@ -674,15 +742,16 @@ const App = {
 
       <button class="voice-cta" data-action="voice">
         <span class="mic">${icon('mic')}</span>
-        <span class="grow"><strong>Aggiungi a voce</strong><span class="small">Di’ ad esempio “Benzina 45 euro”</span></span>
+        <span class="grow"><strong>Aggiungi a voce</strong><span class="small">Di’ ad esempio “Benzina 45 euro con carta”</span></span>
         <span class="chev">${icon('chevR', 'sm')}</span>
       </button>
 
       <div class="search">${icon('search', 'sm')}<input id="txSearch" type="search" placeholder="Cerca nei movimenti" value="${esc(this.query)}" autocomplete="off" aria-label="Cerca nei movimenti"></div>
 
-      <div class="chips" role="group" aria-label="Filtra per categoria">
+      <div class="chips" role="group" aria-label="Filtra i movimenti">
         <button class="chip" data-action="filter" data-cat="all" aria-pressed="${this.filter === 'all'}">Tutti</button>
         <button class="chip" data-action="filter" data-cat="__income" aria-pressed="${this.filter === '__income'}">Entrate</button>
+        <button class="chip" data-action="filter" data-cat="__card" aria-pressed="${this.filter === '__card'}">💳 Carta</button>
         ${this.state.categories.map(c => `<button class="chip" data-action="filter" data-cat="${esc(c.name)}" aria-pressed="${this.filter === c.name}">${esc(c.emoji)} ${esc(c.name)}</button>`).join('')}
       </div>
 
@@ -728,8 +797,9 @@ const App = {
     const q = this.query.trim().toLowerCase();
     let list = this.monthTx();
     if (this.filter === '__income') list = list.filter(t => t.type === 'income');
+    else if (this.filter === '__card') list = list.filter(isCard);
     else if (this.filter !== 'all') list = list.filter(t => t.type === 'expense' && t.category === this.filter);
-    if (q) list = list.filter(t => `${t.title} ${t.category} ${(this.member(t.memberId) || {}).name || ''}`.toLowerCase().includes(q));
+    if (q) list = list.filter(t => `${t.title} ${t.category} ${(this.member(t.memberId) || {}).name || ''} ${isCard(t) ? 'carta di credito' : ''}`.toLowerCase().includes(q));
     list.sort((a, b) => b.date.localeCompare(a.date) || (b.created || 0) - (a.created || 0));
 
     document.getElementById('txCount').textContent = `${list.length} ${list.length === 1 ? 'movimento' : 'movimenti'}`;
@@ -754,7 +824,7 @@ const App = {
           <span class="tx-emoji" style="background:${hexA(c.color, .16)}">${esc(c.emoji)}</span>
           <span class="tx-main">
             <span class="tx-title">${esc(t.title)}</span>
-            <span class="tx-meta">${esc(t.category)}${m ? ` · ${esc(m.name)}` : ''}${t.fixedId ? ` · ${icon('repeat', 'xs')} fisso` : ''}</span>
+            <span class="tx-meta">${esc(t.category)}${m ? ` · ${esc(m.name)}` : ''}${t.fixedId ? ` · ${icon('repeat', 'xs')} fisso` : ''}${isCard(t) ? ` · <span class="cc-tag">${icon('card', 'xs')} carta</span>` : ''}</span>
           </span>
           <span class="amt num ${inc ? 'in' : ''}">${inc ? '+' : '−'}${fmt(t.amount)}</span>
         </button>
@@ -786,15 +856,17 @@ const App = {
         <h3>Spese per categoria</h3>
         ${entries.length ? `
           <div class="chart-box"><canvas id="catChart" role="img" aria-label="Grafico delle spese per categoria"></canvas>
-            <div class="donut-center"><span class="small">Totale uscite</span><strong class="num">${fmt(expense)}</strong></div></div>
+            <div class="donut-center"><span class="small">Totale spese</span><strong class="num">${fmt(expense)}</strong></div></div>
           <div class="legend">${entries.map(([n, v]) => `
             <div class="legend-row"><span class="dot" style="background:${this.cat(n).color}"></span><span class="grow">${esc(this.cat(n).emoji)} ${esc(n)}</span><span class="small num">${Math.round(v / expense * 100)}%</span><strong class="num">${fmt(v)}</strong></div>`).join('')}
-          </div>` : `<div class="empty"><div class="e">📊</div>Nessuna spesa registrata in questo mese.</div>`}
+          </div>
+          <p class="small note">Per data di acquisto, comprese le spese fatte con la carta di credito.</p>` : `<div class="empty"><div class="e">📊</div>Nessuna spesa registrata in questo mese.</div>`}
       </section>
 
       <section class="card">
-        <h3>Entrate e uscite, ultimi 6 mesi</h3>
-        <div class="chart-box"><canvas id="trendChart" role="img" aria-label="Entrate e uscite degli ultimi sei mesi"></canvas></div>
+        <h3>Entrate e uscite dal conto, ultimi 6 mesi</h3>
+        <div class="chart-box"><canvas id="trendChart" role="img" aria-label="Entrate e uscite dal conto degli ultimi sei mesi"></canvas></div>
+        <p class="small note">Le spese con carta contano nel mese in cui vengono addebitate.</p>
       </section>
 
       <section class="card">
@@ -835,7 +907,7 @@ const App = {
           labels: keys.map(k => MONTHS_SHORT[+k.slice(5) - 1]),
           datasets: [
             { label: 'Entrate', data: tot.map(t => t.income), backgroundColor: v('--income'), borderRadius: 6, maxBarThickness: 18 },
-            { label: 'Uscite', data: tot.map(t => t.expense), backgroundColor: v('--expense'), borderRadius: 6, maxBarThickness: 18 }
+            { label: 'Uscite', data: tot.map(t => t.outflow), backgroundColor: v('--expense'), borderRadius: 6, maxBarThickness: 18 }
           ]
         },
         options: {
@@ -867,6 +939,7 @@ const App = {
           <div><span class="small">Speso</span><strong class="num">${fmt(used)}</strong></div>
           <div><span class="small">${left >= 0 ? 'Disponibile' : 'Sforamento'}</span><strong class="num" style="color:${left >= 0 ? 'var(--income)' : 'var(--expense)'}">${fmt(Math.abs(left))}</strong></div>
         </div>
+        <p class="small note">Il budget conta le spese nel mese di acquisto, anche quelle con carta di credito.</p>
       </section>
 
       <div class="section-head"><h3>Budget per categoria</h3><button class="link-btn" data-action="add-cat">+ Categoria</button></div>
@@ -891,7 +964,7 @@ const App = {
           <div class="fixed">
             <button class="tx-body" data-action="edit-fixed" data-id="${esc(f.id)}" aria-label="Modifica ${esc(f.title)}">
               <span class="tx-emoji" style="background:${hexA(this.cat(f.category).color, .16)}">${esc(this.cat(f.category).emoji)}</span>
-              <span class="tx-main"><span class="tx-title">${esc(f.title)}</span><span class="tx-meta">Scade il ${Math.min(f.dueDay, daysInMonth(this.month))} · ${fmt(f.amount)}</span></span>
+              <span class="tx-main"><span class="tx-title">${esc(f.title)}</span><span class="tx-meta">Scade il ${Math.min(f.dueDay, daysInMonth(this.month))} · ${fmt(f.amount)}${f.payment === 'card' ? ` · <span class="cc-tag">${icon('card', 'xs')} carta</span>` : ''}</span></span>
             </button>
             <button class="pill ${pill[st]}" data-action="toggle-fixed" data-id="${esc(f.id)}" aria-pressed="${st === 'paid'}" aria-label="${esc(f.title)}: ${label[st]}. Tocca per cambiare">${st === 'paid' ? icon('check', 'xs') : ''}${label[st]}</button>
           </div>`;
@@ -934,6 +1007,8 @@ const App = {
       case 'edit-tx': { const t = this.findTx(id); if (t) this.openTxForm(t); break; }
       case 'del-tx': this.deleteTx(id); break;
       case 'tx-type': this.setTxType(el); break;
+      case 'tx-pay': this.setTxPayment(el); break;
+      case 'card-debit': this.openCardDebit(); break;
       case 'voice': this.openVoice(); break;
       case 'voice-listen': this.startVoice(el); break;
       case 'settings': this.openSettings(); break;
@@ -963,8 +1038,8 @@ const App = {
       case 'import-json': { const f = document.getElementById('importFile'); if (f) f.click(); break; }
       case 'export-csv': this.exportCSV(); break;
       case 'install-guide': this.openInstallGuide(); break;
-      case 'reset-demo': this.confirm('Ripristinare i dati di esempio?', 'Tutti i dati attuali verranno sostituiti con quelli dimostrativi. Esporta un backup prima, se vuoi conservarli.', 'Ripristina', () => { this.state = defaultState(); this.save(); this.filter = 'all'; this.month = monthKey(new Date()); this.render(); this.toast('Dati di esempio ripristinati'); }); break;
-      case 'wipe': this.confirm('Cancellare tutti i movimenti?', 'Verranno eliminati movimenti, costi fissi e obiettivi. Membri e categorie restano. L’operazione non si può annullare.', 'Cancella tutto', () => { Object.assign(this.state, { transactions: [], fixedCosts: [], goals: [] }); this.save(); this.filter = 'all'; this.render(); this.toast('Dati cancellati'); }); break;
+      case 'reset-demo': this.confirm('Ripristinare i dati di esempio?', 'Tutti i dati attuali verranno sostituiti con quelli dimostrativi. Esporta un backup prima, se vuoi conservarli.', 'Ripristina', () => { this.state = normalize(defaultState()); this.save(); this.filter = 'all'; this.month = monthKey(new Date()); this.render(); this.toast('Dati di esempio ripristinati'); }); break;
+      case 'wipe': this.confirm('Cancellare tutti i movimenti?', 'Verranno eliminati movimenti, costi fissi, obiettivi e importi della carta. Membri e categorie restano. L’operazione non si può annullare.', 'Cancella tutto', () => { Object.assign(this.state, { transactions: [], fixedCosts: [], goals: [], cardDebits: {} }); this.save(); this.filter = 'all'; this.render(); this.toast('Dati cancellati'); }); break;
     }
   },
 
@@ -1044,9 +1119,15 @@ const App = {
   },
 
   /* ----- Movimenti ----- */
+  payNote(date) {
+    const next = shiftMonth(date.slice(0, 7), 1);
+    return `Verrà addebitata il ${+this.cardDebitDate(next).slice(8)} ${monthName(next)} e conterà sul saldo di quel mese.`;
+  },
+
   openTxForm(tx, preset) {
     const isEdit = !!tx;
-    const d = tx || Object.assign({ type: 'expense', amount: '', title: '', category: null, memberId: (this.state.members[0] || {}).id || '', date: this.defaultDate() }, preset || {});
+    const d = tx || Object.assign({ type: 'expense', amount: '', title: '', category: null, memberId: (this.state.members[0] || {}).id || '', date: this.defaultDate(), payment: 'account' }, preset || {});
+    const card = d.type === 'expense' && d.payment === 'card';
     const body = `
       <form class="form" novalidate>
         <div class="seg type full" role="group" aria-label="Tipo di movimento">
@@ -1055,6 +1136,15 @@ const App = {
         </div>
         <input type="hidden" name="type" value="${d.type === 'income' ? 'income' : 'expense'}">
         <label class="field"><span>Importo</span><div class="amount-field"><span class="cur">€</span><input name="amount" inputmode="decimal" autocomplete="off" placeholder="0,00" value="${esc(amountToInput(d.amount))}" ${isEdit ? '' : 'data-autofocus'}></div></label>
+        <div class="field pay-field" ${d.type === 'income' ? 'hidden' : ''}>
+          <span>Pagato con</span>
+          <div class="seg pay full" role="group" aria-label="Metodo di pagamento">
+            <button type="button" data-action="tx-pay" data-value="account" aria-pressed="${!card}">${icon('wallet')} Conto</button>
+            <button type="button" data-action="tx-pay" data-value="card" aria-pressed="${card}">${icon('card')} Carta di credito</button>
+          </div>
+          <input type="hidden" name="payment" value="${card ? 'card' : 'account'}">
+          <p class="form-note pay-note" ${card ? '' : 'hidden'}>${icon('card', 'xs')} <span>${esc(this.payNote(d.date))}</span></p>
+        </div>
         <label class="field"><span>Descrizione</span><input name="title" maxlength="60" placeholder="Es. Spesa settimanale" value="${esc(d.title)}" autocomplete="off"></label>
         <label class="field"><span>Categoria</span><select name="category"></select></label>
         <div class="grid2">
@@ -1074,13 +1164,15 @@ const App = {
         if (!(amount > 0)) return 'Inserisci un importo maggiore di zero, ad esempio 12,50.';
         if (amount > 10000000) return 'L’importo è troppo alto.';
         if (!/^\d{4}-\d{2}-\d{2}$/.test(v.date || '')) return 'Scegli una data.';
+        const type = v.type === 'income' ? 'income' : 'expense';
         const rec = {
           title: ((v.title || '').trim() || v.category).slice(0, 60),
           amount,
-          type: v.type === 'income' ? 'income' : 'expense',
+          type,
           category: v.category,
           memberId: v.memberId || null,
-          date: v.date
+          date: v.date,
+          payment: type === 'expense' && v.payment === 'card' ? 'card' : 'account'
         };
         if (isEdit) Object.assign(tx, rec);
         else this.state.transactions.push(Object.assign({ id: uid(), created: Date.now() }, rec));
@@ -1089,9 +1181,14 @@ const App = {
         if (!rec.date.startsWith(this.month)) this.month = rec.date.slice(0, 7);
         if (this.tab !== 'home') this.tab = 'home';
         this.render();
-        this.toast(isEdit ? 'Movimento aggiornato' : `${rec.type === 'income' ? 'Entrata' : 'Spesa'} di ${fmt(amount)} aggiunta`);
+        if (isEdit) this.toast('Movimento aggiornato');
+        else if (rec.payment === 'card') this.toast(`Spesa di ${fmt(amount)} con carta: addebito a ${monthName(shiftMonth(rec.date.slice(0, 7), 1))}`);
+        else this.toast(`${rec.type === 'income' ? 'Entrata' : 'Spesa'} di ${fmt(amount)} aggiunta`);
       });
       this.fillCategories(form, d.type, d.category);
+      form.querySelector('[name=date]').addEventListener('change', e => {
+        if (/^\d{4}-\d{2}-\d{2}$/.test(e.target.value)) form.querySelector('.pay-note span').textContent = this.payNote(e.target.value);
+      });
     });
   },
 
@@ -1107,7 +1204,16 @@ const App = {
     const type = btn.dataset.value;
     form.querySelector('[name=type]').value = type;
     form.querySelectorAll('[data-action="tx-type"]').forEach(b => b.setAttribute('aria-pressed', String(b === btn)));
+    form.querySelector('.pay-field').hidden = type === 'income';
     this.fillCategories(form, type, null);
+  },
+
+  setTxPayment(btn) {
+    const form = btn.closest('form');
+    const pay = btn.dataset.value;
+    form.querySelector('[name=payment]').value = pay;
+    form.querySelectorAll('[data-action="tx-pay"]').forEach(b => b.setAttribute('aria-pressed', String(b === btn)));
+    form.querySelector('.pay-note').hidden = pay !== 'card';
   },
 
   deleteTx(id) {
@@ -1118,6 +1224,39 @@ const App = {
     this.closeSheet();
     this.render();
     this.toast('Movimento eliminato', { label: 'Annulla', fn: () => { this.state.transactions.splice(i, 0, removed); this.save(); this.render(); } });
+  },
+
+  /* ----- Carta di credito ----- */
+  openCardDebit() {
+    const mk = this.month, prev = shiftMonth(mk, -1);
+    const calc = this.cardSpentIn(prev);
+    const n = this.monthTx(prev).filter(isCard).length;
+    const manual = this.state.cardDebits[mk];
+    this.openSheet(`Addebito carta di ${monthName(mk)}`, `
+      <form class="form" novalidate>
+        <div class="calc-box">
+          <span class="small">Spese con carta di ${esc(monthLabel(prev).toLowerCase())} (${n} ${n === 1 ? 'movimento' : 'movimenti'})</span>
+          <strong class="num">${fmt(calc)}</strong>
+        </div>
+        <label class="field"><span>Importo addebitato sul conto (€)</span><input name="amount" inputmode="decimal" autocomplete="off" placeholder="${esc(amountToInput(calc))}" value="${manual != null ? esc(amountToInput(manual)) : ''}" data-autofocus></label>
+        <p class="form-note">Lascia vuoto per usare il totale calcolato. Inserisci l’importo dell’estratto conto se è diverso, per esempio per commissioni, resi o spese non registrate.</p>
+        <label class="field"><span>Giorno di addebito sul conto</span><input name="cardDay" type="number" inputmode="numeric" min="1" max="31" value="${this.state.settings.cardDay}"></label>
+        <p class="form-error" role="alert" hidden></p>
+        <button type="submit" class="btn primary block">${icon('check')} Salva addebito</button>
+      </form>`, () => this.bindForm(v => {
+        const day = parseInt(v.cardDay, 10);
+        if (!(day >= 1 && day <= 31)) return 'Il giorno di addebito va da 1 a 31.';
+        const raw = (v.amount || '').trim();
+        if (raw === '') delete this.state.cardDebits[mk];
+        else {
+          const amount = parseAmount(raw);
+          if (!(amount >= 0)) return 'Inserisci un importo valido, ad esempio 412,30.';
+          this.state.cardDebits[mk] = amount;
+        }
+        this.state.settings.cardDay = day;
+        this.save(); this.closeSheet(); this.render();
+        this.toast(`Addebito carta di ${monthName(mk)}: ${fmt(this.cardDebit(mk))}`);
+      }));
   },
 
   /* ----- Obiettivi ----- */
@@ -1223,6 +1362,7 @@ const App = {
   /* ----- Costi fissi ----- */
   openFixedForm(f) {
     const isEdit = !!f;
+    const pay = f ? f.payment : 'account';
     this.openSheet(isEdit ? 'Modifica costo fisso' : 'Nuovo costo fisso', `
       <form class="form" novalidate>
         <label class="field"><span>Nome</span><input name="title" maxlength="60" placeholder="Es. Affitto, Netflix, Assicurazione" value="${esc(f ? f.title : '')}" autocomplete="off" ${isEdit ? '' : 'data-autofocus'}></label>
@@ -1230,7 +1370,10 @@ const App = {
           <label class="field"><span>Importo (€)</span><input name="amount" inputmode="decimal" placeholder="0,00" value="${esc(f ? amountToInput(f.amount) : '')}"></label>
           <label class="field"><span>Giorno di scadenza</span><input name="dueDay" type="number" inputmode="numeric" min="1" max="31" placeholder="1–31" value="${f ? f.dueDay : ''}"></label>
         </div>
-        <label class="field"><span>Categoria</span><select name="category">${this.state.categories.map(c => `<option value="${esc(c.name)}" ${(f ? f.category : 'Casa') === c.name ? 'selected' : ''}>${esc(c.emoji)} ${esc(c.name)}</option>`).join('')}</select></label>
+        <div class="grid2">
+          <label class="field"><span>Categoria</span><select name="category">${this.state.categories.map(c => `<option value="${esc(c.name)}" ${(f ? f.category : 'Casa') === c.name ? 'selected' : ''}>${esc(c.emoji)} ${esc(c.name)}</option>`).join('')}</select></label>
+          <label class="field"><span>Pagato con</span><select name="payment"><option value="account" ${pay !== 'card' ? 'selected' : ''}>Conto</option><option value="card" ${pay === 'card' ? 'selected' : ''}>Carta di credito</option></select></label>
+        </div>
         <p class="form-error" role="alert" hidden></p>
         <div class="actions">
           ${isEdit ? `<button type="button" class="btn danger" data-action="del-fixed" data-id="${esc(f.id)}" aria-label="Elimina costo fisso">${icon('trash')}</button>` : ''}
@@ -1243,8 +1386,9 @@ const App = {
         if (!title) return 'Dai un nome al costo fisso.';
         if (!(amount > 0)) return 'Inserisci un importo maggiore di zero.';
         if (!(dueDay >= 1 && dueDay <= 31)) return 'Il giorno di scadenza va da 1 a 31.';
-        if (isEdit) Object.assign(f, { title, amount, dueDay, category: v.category });
-        else this.state.fixedCosts.push({ id: uid(), title, amount, dueDay, category: v.category });
+        const payment = v.payment === 'card' ? 'card' : 'account';
+        if (isEdit) Object.assign(f, { title, amount, dueDay, category: v.category, payment });
+        else this.state.fixedCosts.push({ id: uid(), title, amount, dueDay, category: v.category, payment });
         this.save(); this.closeSheet(); this.render();
         this.toast(isEdit ? 'Costo fisso aggiornato' : 'Costo fisso aggiunto');
       }));
@@ -1261,8 +1405,8 @@ const App = {
       const now = new Date();
       const date = mk === monthKey(now) ? toISO(now) : `${mk}-${pad(Math.min(f.dueDay, daysInMonth(mk)))}`;
       const category = this.state.categories.some(c => c.name === f.category) ? f.category : 'Altro';
-      this.state.transactions.push({ id: uid(), created: Date.now(), title: f.title, amount: f.amount, type: 'expense', category, memberId: (this.state.members[0] || {}).id || null, date, fixedId: f.id });
-      this.toast(`${f.title}: pagamento di ${fmt(f.amount)} registrato`);
+      this.state.transactions.push({ id: uid(), created: Date.now(), title: f.title, amount: f.amount, type: 'expense', category, memberId: (this.state.members[0] || {}).id || null, date, fixedId: f.id, payment: f.payment === 'card' ? 'card' : 'account' });
+      this.toast(f.payment === 'card' ? `${f.title}: ${fmt(f.amount)} con carta, addebito a ${monthName(shiftMonth(mk, 1))}` : `${f.title}: pagamento di ${fmt(f.amount)} registrato`);
     }
     this.save(); this.render();
   },
@@ -1320,7 +1464,7 @@ const App = {
           <p class="form-error" role="alert" hidden></p>
           <button type="submit" class="btn primary block">Continua</button>
         </form>
-        <div class="hints"><p class="small strong">Puoi dire, ad esempio</p><ul><li>Supermercato 62,40 euro</li><li>Benzina 50 euro Veronica</li><li>Stipendio 2800 euro</li></ul></div>
+        <div class="hints"><p class="small strong">Puoi dire, ad esempio</p><ul><li>Supermercato 62,40 euro</li><li>Benzina 50 euro Veronica</li><li>Ristorante 80 euro con carta</li><li>Stipendio 2800 euro</li></ul></div>
       </div>`, () => this.bindForm(v => {
         const text = (v.text || '').trim();
         if (!text) return 'Detta o scrivi una frase con un importo.';
@@ -1396,6 +1540,7 @@ const App = {
     else { const m = lower.match(/\d[\d.,]*/); if (m) amount = parseAmount(m[0].replace(/[.,]$/, '')); }
 
     const type = /\b(stipendio|entrat\w*|incass\w*|ricevut\w*|rimbors\w*|guadagn\w*|bonus|accredit\w*|vendut\w*|tredicesima|quattordicesima)\b/.test(lower) ? 'income' : 'expense';
+    const payment = type === 'expense' && /\b(carta|visa|mastercard|amex|american express)\b/.test(lower) && !/\bbancomat\b/.test(lower) ? 'card' : 'account';
     let category;
     if (type === 'income') {
       category = /stipendio|bonus|accredit|tredicesima|quattordicesima/.test(lower) ? 'Lavoro' : /rimbors/.test(lower) ? 'Rimborsi' : 'Extra';
@@ -1414,11 +1559,13 @@ const App = {
     const member = this.state.members.find(m => new RegExp(`(^|\\s)${escRe(m.name.toLowerCase())}(\\s|$|[.,])`).test(lower));
     let title = text.replace(/\d[\d.,]*\s*(euro|€)?(\s*e\s*\d{1,2}(\s*centesimi)?)?/gi, ' ');
     if (member) title = title.replace(new RegExp(escRe(member.name), 'gi'), ' ');
-    title = title.replace(/\b(ho speso|ho pagato|pagato|spesa di|euro)\b/gi, ' ').replace(/\s+/g, ' ').trim()
-      .replace(/^(di|per|al|alla|allo|ai|da|in|a|e)\s+/i, '').replace(/\s+(di|per|al|alla|da|in|a|e)$/i, '').replace(/[.,;:]+$/, '').trim();
+    title = title.replace(/\b(pagat[oa] )?(con|in|sulla|via) (la )?(carta( di credito)?|visa|mastercard|amex)\b/gi, ' ')
+      .replace(/\bcarta di credito\b/gi, ' ')
+      .replace(/\b(ho speso|ho pagato|pagato|spesa di|euro)\b/gi, ' ').replace(/\s+/g, ' ').trim()
+      .replace(/^(di|per|al|alla|allo|ai|da|in|a|e|con)\s+/i, '').replace(/\s+(di|per|al|alla|da|in|a|e|con)$/i, '').replace(/[.,;:]+$/, '').trim();
     if (title.length < 2) title = category;
     return {
-      type, amount, category,
+      type, amount, category, payment,
       title: capitalize(title).slice(0, 60),
       memberId: member ? member.id : ((this.state.members[0] || {}).id || ''),
       date: toISO(new Date())
@@ -1435,79 +1582,7 @@ const App = {
             ? 'I dati vengono salvati automaticamente su questo dispositivo.'
             : 'Questo browser non permette di salvare: i dati restano finché la pagina è aperta. Esporta un backup per conservarli.'}
             <div class="small">${s.transactions.length} movimenti, ${s.members.length} membri, ${s.goals.length} obiettivi</div></div></div>
+        <h4>Carta di credito</h4>
+        <button class="setting-row" data-action="card-debit">${icon('card')}<span class="grow"><span class="t">Addebito carta</span><span class="small">Giorno di addebito: ${s.settings.cardDay} di ogni mese</span></span></button>
         <h4>Backup</h4>
-        <button class="setting-row" data-action="export-json">${icon('download')}<span class="grow"><span class="t">Esporta backup</span><span class="small">Salva tutti i dati in un file .json</span></span></button>
-        <button class="setting-row" data-action="import-json">${icon('upload')}<span class="grow"><span class="t">Importa backup</span><span class="small">Ripristina da un file .json</span></span></button>
-        <button class="setting-row" data-action="export-csv">${icon('file')}<span class="grow"><span class="t">Esporta movimenti del mese</span><span class="small">File CSV da aprire con Excel</span></span></button>
-        <h4>App</h4>
-        <button class="setting-row" data-action="install-guide">${icon('phone')}<span class="grow"><span class="t">Aggiungi alla schermata Home</span><span class="small">Usala come un’app sul telefono</span></span></button>
-        <h4>Dati</h4>
-        <button class="setting-row danger" data-action="reset-demo">${icon('refresh')}<span class="grow"><span class="t">Ripristina dati di esempio</span></span></button>
-        <button class="setting-row danger" data-action="wipe">${icon('eraser')}<span class="grow"><span class="t">Cancella movimenti e obiettivi</span></span></button>
-        <input type="file" id="importFile" accept="application/json,.json" hidden>
-        <p class="small center" style="margin-top:10px">FamBudget Pro ${VERSION}</p>
-      </div>`, root => {
-        root.querySelector('#importFile').addEventListener('change', e => {
-          const file = e.target.files && e.target.files[0];
-          if (!file) return;
-          const reader = new FileReader();
-          reader.onload = () => {
-            try {
-              const parsed = JSON.parse(reader.result);
-              const data = normalize(parsed.familyMembers || parsed.budgets ? migrateLegacy(parsed) : (parsed.data || parsed));
-              this.confirm('Importare questo backup?', `Contiene ${data.transactions.length} movimenti e ${data.members.length} membri. I dati attuali verranno sostituiti.`, 'Importa', () => {
-                this.state = data; this.save(); this.filter = 'all'; this.render(); this.toast('Backup importato');
-              });
-            } catch (err) { this.toast('Il file non è un backup FamBudget valido'); }
-          };
-          reader.onerror = () => this.toast('Impossibile leggere il file');
-          reader.readAsText(file);
-        });
-      });
-  },
-
-  download(filename, content, mime) {
-    try {
-      const blob = new Blob([content], { type: mime });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url; a.download = filename; a.rel = 'noopener';
-      document.body.appendChild(a); a.click(); a.remove();
-      setTimeout(() => URL.revokeObjectURL(url), 1500);
-      return true;
-    } catch (e) { this.toast('Download non riuscito in questo browser'); return false; }
-  },
-
-  exportJSON() {
-    const payload = { app: 'FamBudget Pro', version: VERSION, exportedAt: new Date().toISOString(), data: this.state };
-    if (this.download(`fambudget-backup-${toISO(new Date())}.json`, JSON.stringify(payload, null, 2), 'application/json')) this.toast('Backup esportato');
-  },
-
-  exportCSV() {
-    const tx = this.monthTx().slice().sort((a, b) => a.date.localeCompare(b.date));
-    if (!tx.length) { this.toast('Nessun movimento da esportare in questo mese'); return; }
-    const q = v => `"${String(v).replace(/"/g, '""')}"`;
-    const rows = [['Data', 'Tipo', 'Descrizione', 'Categoria', 'Membro', 'Importo']]
-      .concat(tx.map(t => [t.date.split('-').reverse().join('/'), t.type === 'income' ? 'Entrata' : 'Uscita', t.title, t.category, (this.member(t.memberId) || {}).name || '', (t.type === 'income' ? t.amount : -t.amount).toFixed(2).replace('.', ',')]));
-    const csv = '\ufeff' + rows.map(r => r.map(q).join(';')).join('\r\n');
-    if (this.download(`fambudget-${this.month}.csv`, csv, 'text/csv;charset=utf-8')) this.toast('CSV esportato');
-  },
-
-  openInstallGuide() {
-    this.openSheet('Aggiungi alla schermata Home', `
-      <div class="settings">
-        <h4>iPhone e iPad (Safari)</h4>
-        <ol class="steps"><li>Tocca il pulsante Condividi in basso.</li><li>Scegli “Aggiungi alla schermata Home”.</li><li>Conferma con “Aggiungi”.</li></ol>
-        <h4>Android (Chrome)</h4>
-        <ol class="steps"><li>Tocca il menu con i tre puntini in alto a destra.</li><li>Scegli “Aggiungi a schermata Home” o “Installa app”.</li></ol>
-        <button type="button" class="btn secondary block" data-action="close-sheet" style="margin-top:14px">Ho capito</button>
-      </div>`);
-  }
-};
-
-window.FamBudget = App;
-document.addEventListener('DOMContentLoaded', () => App.init());
-})();
-</script>
-</body>
-</html>
+        <butto
