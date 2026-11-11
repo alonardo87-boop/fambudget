@@ -17,61 +17,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.js" defer></script>
-<link rel="stylesheet" href="style.css">
-</head>
-<body>
-
-<header class="app-header">
-  <div class="header-row">
-    <div class="brand">
-      <div class="brand-logo" data-icon="wallet"></div>
-      <div>
-        <div class="brand-name">FamBudget <span class="badge">Pro</span></div>
-        <div class="brand-sub" id="headerSub">Budget familiare</div>
-      </div>
-    </div>
-    <div class="header-actions">
-      <button class="icon-btn accent" data-action="voice" data-icon="mic" aria-label="Inserimento vocale"></button>
-      <button class="icon-btn" data-action="settings" data-icon="sliders" aria-label="Impostazioni e backup"></button>
-    </div>
-  </div>
-  <div class="month-switch">
-    <button class="arrow" data-action="month-prev" data-icon="chevL" aria-label="Mese precedente"></button>
-    <button class="month-label" data-action="month-today" id="monthLabel" aria-live="polite"></button>
-    <button class="arrow" data-action="month-next" data-icon="chevR" aria-label="Mese successivo"></button>
-  </div>
-</header>
-
-<main id="main">
-  <noscript><div class="card noscript">Per usare FamBudget attiva JavaScript nel browser.</div></noscript>
-</main>
-
-<nav class="bottom-nav" aria-label="Navigazione principale">
-  <div class="nav-grid">
-    <button class="nav-btn" data-action="tab" data-tab="home" data-icon="home"><span>Home</span></button>
-    <button class="nav-btn" data-action="tab" data-tab="analytics" data-icon="pie"><span>Analisi</span></button>
-    <button class="fab" data-action="add-tx" data-icon="plus" aria-label="Nuovo movimento"></button>
-    <button class="nav-btn" data-action="tab" data-tab="budget" data-icon="target"><span>Budget</span></button>
-    <button class="nav-btn" data-action="tab" data-tab="family" data-icon="users"><span>Famiglia</span></button>
-  </div>
-</nav>
-
-<div id="toasts" class="toast-wrap" aria-live="polite"></div>
-
-<div id="sheet" class="sheet-backdrop" hidden>
-  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
-    <div class="sheet-handle"></div>
-    <div class="sheet-head">
-      <h2 id="sheetTitle"></h2>
-      <button class="icon-btn" data-action="close-sheet" data-icon="x" aria-label="Chiudi"></button>
-    </div>
-    <div id="sheetBody"></div>
-  </div>
-</div>
-
-<script src="app.js"></script>
-</body>
-</html>
+<style>
 :root{
   --bg:#eef4f1; --glow-1:rgba(16,185,129,.20); --glow-2:rgba(13,148,136,.14);
   --surface:rgba(255,255,255,.82); --surface-2:rgba(241,245,243,.9); --surface-solid:#ffffff;
@@ -358,6 +304,59 @@ main{max-width:560px;margin:0 auto;padding:16px 16px calc(var(--nav-h) + env(saf
 .noscript{max-width:480px;margin:60px auto;padding:20px;text-align:center}
 @media (prefers-reduced-motion: reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 @media (max-width:360px){.big{font-size:30px}.kpi .v{font-size:14px}}
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <div class="header-row">
+    <div class="brand">
+      <div class="brand-logo" data-icon="wallet"></div>
+      <div>
+        <div class="brand-name">FamBudget <span class="badge">Pro</span></div>
+        <div class="brand-sub" id="headerSub">Budget familiare</div>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="icon-btn accent" data-action="voice" data-icon="mic" aria-label="Inserimento vocale"></button>
+      <button class="icon-btn" data-action="settings" data-icon="sliders" aria-label="Impostazioni e backup"></button>
+    </div>
+  </div>
+  <div class="month-switch">
+    <button class="arrow" data-action="month-prev" data-icon="chevL" aria-label="Mese precedente"></button>
+    <button class="month-label" data-action="month-today" id="monthLabel" aria-live="polite"></button>
+    <button class="arrow" data-action="month-next" data-icon="chevR" aria-label="Mese successivo"></button>
+  </div>
+</header>
+
+<main id="main">
+  <noscript><div class="card noscript">Per usare FamBudget attiva JavaScript nel browser.</div></noscript>
+</main>
+
+<nav class="bottom-nav" aria-label="Navigazione principale">
+  <div class="nav-grid">
+    <button class="nav-btn" data-action="tab" data-tab="home" data-icon="home"><span>Home</span></button>
+    <button class="nav-btn" data-action="tab" data-tab="analytics" data-icon="pie"><span>Analisi</span></button>
+    <button class="fab" data-action="add-tx" data-icon="plus" aria-label="Nuovo movimento"></button>
+    <button class="nav-btn" data-action="tab" data-tab="budget" data-icon="target"><span>Budget</span></button>
+    <button class="nav-btn" data-action="tab" data-tab="family" data-icon="users"><span>Famiglia</span></button>
+  </div>
+</nav>
+
+<div id="toasts" class="toast-wrap" aria-live="polite"></div>
+
+<div id="sheet" class="sheet-backdrop" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+    <div class="sheet-handle"></div>
+    <div class="sheet-head">
+      <h2 id="sheetTitle"></h2>
+      <button class="icon-btn" data-action="close-sheet" data-icon="x" aria-label="Chiudi"></button>
+    </div>
+    <div id="sheetBody"></div>
+  </div>
+</div>
+
+<script>
 (function () {
 'use strict';
 
@@ -1662,3 +1661,6 @@ const App = {
 window.FamBudget = App;
 document.addEventListener('DOMContentLoaded', () => App.init());
 })();
+</script>
+</body>
+</html>
